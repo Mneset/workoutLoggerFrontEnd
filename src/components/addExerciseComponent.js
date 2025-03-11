@@ -1,0 +1,76 @@
+import React, { useState, useEffect } from 'react';
+import api from '../api';
+
+function AddExerciseComponent() {
+    //exerciseId, setId, reps, weight, notes, sessionLogId
+    const [exerciseId, setExerciseId] = useState(1);
+    const [setId, setSetId] = useState(1);
+    const [reps, setReps] = useState(10);
+    const [weight, setWeight] = useState(100);
+    const [notes, setNotes] = useState('');
+    const [sessionLogId, setSessionLogId] = useState('');
+
+    const handleAddExercise = async (e) => {
+        e.preventDefault();
+    
+        try {
+            const response = await api.post('/session/exercise', {exerciseId, setId, reps, weight, notes, sessionLogId})
+            console.log("Exercise added to session:", response.data);
+        } catch (error) {
+            console.log("Error adding exercise to session:", error);
+        }
+    }
+
+    return (
+        <div>
+            <h2>Add a exercise to the session</h2>
+            <form className='add-exercise-form' onSubmit={handleAddExercise}> 
+                <label>Exercise ID: </label>
+                <input 
+                    type="number" 
+                    name="userId" 
+                    placeholder='1' 
+                    onChange={(e) => setExerciseId(e.target.value)}
+                />
+                <label>Set ID: </label>
+                <input 
+                    type="number" 
+                    name="setId" 
+                    placeholder='1' 
+                    onChange={(e) => setSetId(e.target.value)}
+                />
+                <label>Reps: </label>
+                <input 
+                    type="number" 
+                    name="reps" 
+                    placeholder='10' 
+                    onChange={(e) => setReps(e.target.value)}
+                />
+                <label>Weight: </label>
+                <input 
+                    type="number" 
+                    name="weight" 
+                    placeholder='100' 
+                    onChange={(e) => setWeight(e.target.value)}
+                />
+                <label>Notes: </label>
+                <input 
+                    type="string" 
+                    name="notes" 
+                    placeholder='Please provide notes if needed' 
+                    onChange={(e) => setNotes(e.target.value)}
+                />
+                <label>Session Log ID: </label>
+                <input 
+                    type="number" 
+                    name="sessionLogId" 
+                    placeholder='Please provide the session log ID' 
+                    onChange={(e) => setSessionLogId(e.target.value)}
+                />
+                <button type="submit">Add exercise</button>
+            </form>
+        </div>
+    )
+}
+
+export default AddExerciseComponent;

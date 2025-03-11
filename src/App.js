@@ -1,31 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
+import StartSessionComponent from './components/startSessionComponent';
+import AddExerciseComponent from './components/addExerciseComponent';
+import EndSessionComponent from './components/endSessionComponent';
+import GetSessionsComponent from './components/getSessionsComponent';
+import GetSessionComponent from './components/getSessionComponent';
+
 
 function App() {
 
   return (   
     <div>
+
       <h1>Workout App</h1>
-      <h2>Start a new session</h2>
-      <form className='start-session-form'> 
-        <label>User ID: </label>
-        <input type="number" placeholder='Please provide your User ID'/>
-        <button type="submoit">Start session</button>
-      </form>
+        <div className='form-container'>
+          <StartSessionComponent />
+          <AddExerciseComponent />
+          <EndSessionComponent />
+        </div>
 
-      <h2>Add exercises to your session</h2>
-      <form className='add-exercise-form'>
-        <label>Add a exercise: </label>
-        <input type="number" placeholder='Please provide the exercise ID'/>
-        <button type="submit">Add exercise</button>
-      </form>
+        <div className='table-container'>
+          <div className='get-sessions-container'>
+            <GetSessionsComponent />
+          </div>
+          <div className='get-session-container'>
+            <GetSessionComponent />
+          </div>
+        </div>
 
-      <h2>End session</h2>
-      <form className='end-session-form'> 
-        <button type="submoit">End session</button>
-      </form>
-
-      <h2>Session Log</h2>
     </div>   
   );
 }
