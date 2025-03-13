@@ -16,6 +16,7 @@ function AddExerciseComponent() {
         try {
             const response = await api.post('/session/exercise', {exerciseId, setId, reps, weight, notes, sessionLogId})
             console.log("Exercise added to session:", response.data);
+            alert("Exercise added to session!");
         } catch (error) {
             console.log("Error adding exercise to session:", error);
         }

@@ -43,14 +43,20 @@ function GetSessionsComponent() {
                     </tr>
                 </thead>
                 <tbody>
-                    {sessions.map((session) => (
-                        <tr key={session.id}>
-                            <td>{session.id}</td>
-                            <td>{session.sessionDateStart}</td>
-                            <td>{session.sessionDateEnd}</td>
-                            <td>{session.notes}</td>
+                    {sessions && sessions.length > 0 ? 
+                        (sessions.map((session) => (
+                            <tr key={session.id}>
+                                <td>{session.id}</td>
+                                <td>{session.sessionDateStart}</td>
+                                <td>{session.sessionDateEnd}</td>
+                                <td>{session.notes}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">Sessions has not been requested</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
         </div>

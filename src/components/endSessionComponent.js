@@ -11,6 +11,7 @@ function EndSessionComponent() {
         try {
             const response = await api.put('/session/end', {sessionLogId, workoutHistoryId, notes})
             console.log("Session ended:", response.data);
+            alert("Session ended!");
         } catch (error) {
             console.log("Error ending session:", error);      
         }

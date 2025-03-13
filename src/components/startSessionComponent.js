@@ -9,6 +9,7 @@ function StartSessionComponent() {
         try {
             const response = await api.post('/session', {userId})
             console.log("Session started:", response.data);
+            alert("Session started!");
         } catch (error) {
             console.log("Error starting session:", error);      
         }

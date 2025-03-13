@@ -3,7 +3,7 @@ import api from '../api';
 
 function GetSessionComponent() {
     const [sessionLogId, setSessionLogId] = useState('');
-    const [session, setSession] = useState('');
+    const [session, setSession] = useState(null);
     
     const handleGetSession = async (e) => {
         e.preventDefault();
@@ -37,18 +37,26 @@ function GetSessionComponent() {
                 <thead>
                     <tr>
                         <th>Session ID</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Notes</th>
+                        <th>Exercise</th>
+                        <th>Reps</th>
+                        <th>Weight</th>
                     </tr>
                 </thead>
                 <tbody>
-                        <tr key={session.id}>
-                            <td>{session.id}</td>
-                            <td>{session.sessionDateStart}</td>
-                            <td>{session.sessionDateEnd}</td>
-                            <td>{session.notes}</td>
+                    {session && session.ExerciseLogs && session.ExerciseLogs.length > 0 ? (
+                        session.ExerciseLogs.map((log) => (
+                            <tr key={log.id}>
+                                <td>{session.id}</td>
+                                <td>{log.Exercise.name}</td>
+                                <td>{log.reps}</td>
+                                <td>{log.weight}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4">No session has been selected</td>
                         </tr>
+                    )}
                 </tbody>
             </table>
         </div>
