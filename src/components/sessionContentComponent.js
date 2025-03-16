@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
-function AddExerciseComponent() {
+function SessionContentComponent( {onSessionEnd }) {
     //exerciseId, setId, reps, weight, notes, sessionLogId
     const [exerciseId, setExerciseId] = useState(1);
     const [setId, setSetId] = useState(1);
@@ -9,6 +9,7 @@ function AddExerciseComponent() {
     const [weight, setWeight] = useState(100);
     const [notes, setNotes] = useState('');
     const [sessionLogId, setSessionLogId] = useState('');
+    const [sessionNotes, setSessionNotes] = useState('');
 
     const handleAddExercise = async (e) => {
         e.preventDefault();
@@ -22,6 +23,18 @@ function AddExerciseComponent() {
         }
     }
 
+    const handleEndSession = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await api.put('/session/end', {sessionLogId, sessionNotes})
+            console.log("Session ended:", response.data);
+            alert("Session ended!");
+            onSessionEnd()
+        } catch (error) {
+            console.log("Error ending session:", error);      
+        }
+    }
+
     return (
         <div>
             <h2>Add a exercise to the session</h2>
@@ -29,7 +42,7 @@ function AddExerciseComponent() {
                 <label>Exercise ID: </label>
                 <input 
                     type="number" 
-                    name="userId" 
+                    name="exerciseId" 
                     placeholder='1' 
                     onChange={(e) => setExerciseId(e.target.value)}
                 />
@@ -70,8 +83,26 @@ function AddExerciseComponent() {
                 />
                 <button type="submit">Add exercise</button>
             </form>
+
+            <h2>End session</h2>
+            <form className='end-session-form' onSubmit={handleEndSession}> 
+                <label>Session Log ID: </label>
+                <input type="number" 
+                    name="sessionLogId" 
+                    placeholder='Please provide the session log ID' 
+                    onChange={(e) => setSessionLogId(e.target.value)}
+                />
+                <label>Notes: </label>
+                <input type="string" 
+                    name="SessionNotes" 
+                    placeholder='Please provide notes if needed' 
+                    onChange={(e) => setSessionNotes(e.target.value)}
+                />
+                <button type="submit">End session</button>
+            </form>
         </div>
+        
     )
 }
 
-export default AddExerciseComponent;
+export default SessionContentComponent;

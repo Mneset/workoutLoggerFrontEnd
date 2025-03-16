@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
-function StartSessionComponent() {
+function StartSessionComponent({ onSessionStart }) {
     const [userId, setUserId] = useState(1);
 
     const handleStartSession = async (e) => {
@@ -10,6 +10,7 @@ function StartSessionComponent() {
             const response = await api.post('/session', {userId})
             console.log("Session started:", response.data);
             alert("Session started!");
+            onSessionStart()
         } catch (error) {
             console.log("Error starting session:", error);      
         }

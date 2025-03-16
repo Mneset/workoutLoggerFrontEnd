@@ -40,6 +40,7 @@ function GetSessionComponent() {
                         <th>Exercise</th>
                         <th>Reps</th>
                         <th>Weight</th>
+                        <th>Notes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +51,7 @@ function GetSessionComponent() {
                                 <td>{log.Exercise.name}</td>
                                 <td>{log.reps}</td>
                                 <td>{log.weight}</td>
+                                <td>{log.notes}</td>
                             </tr>
                         ))
                     ) : (
