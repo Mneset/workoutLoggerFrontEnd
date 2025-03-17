@@ -7,7 +7,7 @@ function StartSessionComponent({ onSessionStart }) {
     const handleStartSession = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('/session', {userId})
+            const response = await api.post('/new-session', {userId})
             console.log("Session started:", response.data);
             alert("Session started!");
             onSessionStart()

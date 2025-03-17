@@ -8,7 +8,7 @@ function GetSessionsComponent() {
     const handleGetSessions = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.get('/session', { params: { userId } });
+            const response = await api.get('/session-history', { params: { userId } });
                 setSessions(response.data.sessions);
             console.log('Sessions for user:', response.data.sessions);
         } catch (error) {
@@ -44,7 +44,7 @@ function GetSessionsComponent() {
                 </thead>
                 <tbody>
                     {sessions && sessions.length > 0 ? 
-                        (sessions.map((session) => (
+                        (sessions.filter(session => session.id >= 6).map((session) => (
                             <tr key={session.id}>
                                 <td>{session.id}</td>
                                 <td>{session.sessionDateStart}</td>

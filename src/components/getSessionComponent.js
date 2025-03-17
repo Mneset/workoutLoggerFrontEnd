@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
+const options = {
+    
+}
+
 function GetSessionComponent() {
     const [sessionLogId, setSessionLogId] = useState('');
     const [session, setSession] = useState(null);
@@ -8,7 +12,7 @@ function GetSessionComponent() {
     const handleGetSession = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.get('/session/:id', { params: { sessionLogId } });
+            const response = await api.get('/new-session/:id', { params: { sessionLogId } });
                 setSession(response.data.session);
             console.log('Current session:', response.data.session);
         } catch (error) {
@@ -30,7 +34,7 @@ function GetSessionComponent() {
                     />
                     <button type="submit">Get session</button>
                 </form>
-                <h2>Session</h2>
+                <h2>Current session</h2>
             </div>
 
             <table>

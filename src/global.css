@@ -1,8 +1,5 @@
-body {
-    padding-left: 50px;
-    padding-top: 20px;
-    padding-bottom: 50px;
-    padding-right: 50px;
+.main-content {
+    padding: 70px
 }
 
 h1 {
@@ -83,6 +80,10 @@ th {
 .table-container {
     display: flex;
     justify-content: center;
-    gap: 100px;
-    
+    gap: 200px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
 }

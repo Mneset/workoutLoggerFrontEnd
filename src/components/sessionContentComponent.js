@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import api from '../api';
 
 function SessionContentComponent( {onSessionEnd }) {
@@ -11,11 +11,9 @@ function SessionContentComponent( {onSessionEnd }) {
     const [sessionLogId, setSessionLogId] = useState('');
     const [sessionNotes, setSessionNotes] = useState('');
 
-    const handleAddExercise = async (e) => {
-        e.preventDefault();
-    
+    const handleAddExercise = async () => {
         try {
-            const response = await api.post('/session/exercise', {exerciseId, setId, reps, weight, notes, sessionLogId})
+            const response = await api.post('/new-session/exercise', {exerciseId, setId, reps, weight, notes, sessionLogId})
             console.log("Exercise added to session:", response.data);
             alert("Exercise added to session!");
         } catch (error) {
@@ -23,10 +21,10 @@ function SessionContentComponent( {onSessionEnd }) {
         }
     }
 
-    const handleEndSession = async (e) => {
-        e.preventDefault();
+    const handleEndSession = async () => {
+        const sessionNotes = window.prompt("Please provide notes for the session");
         try {
-            const response = await api.put('/session/end', {sessionLogId, sessionNotes})
+            const response = await api.put('/new-session/end', {sessionLogId, sessionNotes})
             console.log("Session ended:", response.data);
             alert("Session ended!");
             onSessionEnd()
@@ -35,10 +33,20 @@ function SessionContentComponent( {onSessionEnd }) {
         }
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const action = e.nativeEvent.submitter.name;
+        if (action === 'addExercise'){
+            handleAddExercise();
+        } else if (action === 'endSession') {
+            handleEndSession();
+        }
+    };
+
     return (
         <div>
             <h2>Add a exercise to the session</h2>
-            <form className='add-exercise-form' onSubmit={handleAddExercise}> 
+            <form className='add-exercise-form' onSubmit={handleSubmit}> 
                 <label>Exercise ID: </label>
                 <input 
                     type="number" 
@@ -67,7 +75,7 @@ function SessionContentComponent( {onSessionEnd }) {
                     placeholder='100' 
                     onChange={(e) => setWeight(e.target.value)}
                 />
-                <label>Notes: </label>
+                <label>Exercise Notes: </label>
                 <input 
                     type="string" 
                     name="notes" 
@@ -81,25 +89,12 @@ function SessionContentComponent( {onSessionEnd }) {
                     placeholder='Please provide the session log ID' 
                     onChange={(e) => setSessionLogId(e.target.value)}
                 />
-                <button type="submit">Add exercise</button>
+                <div className='button-group'>
+                    <button type="submit" name='addExercise'>Add exercise</button>
+                    <button type="submit" name='endSession'>End session</button>
+                </div>
             </form>
 
-            <h2>End session</h2>
-            <form className='end-session-form' onSubmit={handleEndSession}> 
-                <label>Session Log ID: </label>
-                <input type="number" 
-                    name="sessionLogId" 
-                    placeholder='Please provide the session log ID' 
-                    onChange={(e) => setSessionLogId(e.target.value)}
-                />
-                <label>Notes: </label>
-                <input type="string" 
-                    name="SessionNotes" 
-                    placeholder='Please provide notes if needed' 
-                    onChange={(e) => setSessionNotes(e.target.value)}
-                />
-                <button type="submit">End session</button>
-            </form>
         </div>
         
     )

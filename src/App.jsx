@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import StartSessionComponent from './components/startSessionComponent';
 import SessionContentComponent from './components/sessionContentComponent.js';
 import GetSessionsComponent from './components/getSessionsComponent';
 import GetSessionComponent from './components/getSessionComponent';
+import NavbarComponent from './components/navbarComponent.js'
 
 
 function App() {
@@ -20,25 +22,27 @@ function App() {
     setSessionStarted(false)
   }
 
-  return (   
-    <div>
-
-      <h1>Workout App</h1>
-        <div className='form-container'>
-          {!sessionStarted && <StartSessionComponent onSessionStart={handleSessionStarted}/>}
-          {sessionStarted && <SessionContentComponent onSessionEnd={handleSessionEnded} /> }
-        </div>
-
-        <div className='table-container'>
-          <div className='get-sessions-container'>
-            <GetSessionsComponent />
+  return (  
+      <Router>
+      <NavbarComponent />
+      <div className='main-content'>
+        <Routes>
+          <Route path="/" element={<h1>Workout Logger</h1>} />
+          <Route path="/new-session" element={
+            <div className='form-container'>
+            {!sessionStarted && <StartSessionComponent onSessionStart={handleSessionStarted}/>}
+            {sessionStarted && <SessionContentComponent onSessionEnd={handleSessionEnded} /> }
           </div>
-          <div className='get-session-container'>
+          } /> 
+          <Route path="/session-history" element={
+            <div className='table-container'>
+            <GetSessionsComponent />
             <GetSessionComponent />
           </div>
-        </div>
-
-    </div>   
+          } />
+          </Routes>
+      </div>
+    </Router>   
   );
 }
 
