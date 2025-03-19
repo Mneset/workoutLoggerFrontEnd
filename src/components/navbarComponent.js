@@ -1,7 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react'
 
 function NavbarComponent() {
+
+  const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+
+
   return (
     <nav id="navbar" className="navbar navbar-expand-lg navbar-light bg-light position-fixed w-100 fixed-top">
       <div className="container-fluid">
@@ -25,7 +30,21 @@ function NavbarComponent() {
               <Link className="nav-link" to="/">Plans</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/">Login</Link>
+              {isAuthenticated ? (
+                <button
+                className='btn, btn-link navlink'
+                onClick={() => logout({ returnTo: window.location.origin})}
+              >
+                Logout
+              </button>
+              ) : (
+                <button
+                  className='btn btn-link nav-link'
+                  onClick={() => loginWithRedirect()}
+                >
+                  Login
+                </button>
+              )}         
             </li>
           </ul>
         </div>

@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
-const options = {
-    
-}
-
 function GetSessionComponent() {
     const [sessionLogId, setSessionLogId] = useState('');
     const [session, setSession] = useState(null);
