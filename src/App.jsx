@@ -6,6 +6,7 @@ import SessionContentComponent from './components/sessionContentComponent.js';
 import GetSessionsComponent from './components/getSessionsComponent';
 import GetSessionComponent from './components/getSessionComponent';
 import NavbarComponent from './components/navbarComponent.js'
+import Profile from './components/profileComponent.js'
 
 
 function App() {
@@ -27,7 +28,12 @@ function App() {
       <NavbarComponent />
       <div className='main-content'>
         <Routes>
-          <Route path="/" element={<h1>Workout Logger</h1>} />
+          <Route path="/" element={
+            <div>
+              <h1>Workout Logger</h1>
+              <Profile/>
+            </div>
+            } />
           <Route path="/new-session" element={
             <div className='form-container'>
             {!sessionStarted && <StartSessionComponent onSessionStart={handleSessionStarted}/>}
