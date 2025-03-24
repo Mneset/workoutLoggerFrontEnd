@@ -3,21 +3,23 @@ import { useAuth0 } from "@auth0/auth0-react";
 import api from '../api';
 
 function StartSessionComponent({ onSessionStart }) {
-    const [userId, setUserId] = useState(1);
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, user } = useAuth0();
 
     const handleStartSession = async (e) => {
         e.preventDefault();
         try {
-
             const accessToken = await getAccessTokenSilently({
                 authorizationParams: {
-                    audience: `https://${process.env.REACT_APP_ACCESS_DOMAIN}/api/v2/`,
-                    scope: "read:current_user",
+                    audience: `http://localhost:3000/api/v1`,
+                    scope: "openid start:session",
                 },
             });
 
-            const response = await api.post('/new-session', {userId}, {
+            console.log('user.sub:', user.sub);
+            console.log("Access Token:", accessToken);
+            
+
+            const response = await api.post('/new-session', {userId: user.sub}, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }
@@ -27,20 +29,14 @@ function StartSessionComponent({ onSessionStart }) {
             alert("Session started!");
             onSessionStart()
         } catch (error) {
-            console.log("Error starting session:", error);      
+            console.error("Error starting session:", error);      
         }
     }
 
     return (
         <div>
             <h2>Start a new session</h2>
-            <form className='start-session-form' onSubmit={handleStartSession}> 
-                <label>User ID: </label>
-                <input type="number" 
-                    name="userId" 
-                    placeholder='1' 
-                    onChange={(e) => setUserId(e.target.value)}
-                />
+            <form className='start-session-form' onSubmit={handleStartSession}>
                 <button type="submit">Start session</button>
             </form>
         </div>

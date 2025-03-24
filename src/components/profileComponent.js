@@ -7,7 +7,7 @@ const Profile = () => {
 
   useEffect(() => {
     const getUserMetadata = async () => {
-      const domain = "dev-n8xnfzfw0w26p6nq.us.auth0.com";
+      const domain = process.env.REACT_APP_ACCESS_DOMAIN;
   
       try {
         const accessToken = await getAccessTokenSilently({
@@ -35,7 +35,9 @@ const Profile = () => {
       }
     };
   
-    getUserMetadata();
+    if (user?.sub) {
+      getUserMetadata();
+    }
   }, [getAccessTokenSilently, user?.sub]);
 
   return (

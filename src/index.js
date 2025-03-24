@@ -5,8 +5,6 @@ import '../src/global.css';
 import App from './App';
 import { Auth0Provider } from '@auth0/auth0-react'
 
-console.log('Auth0 Domain:', process.env.REACT_APP_ACCESS_DOMAIN);
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -15,8 +13,8 @@ root.render(
       clientId={process.env.REACT_APP_ACCESS_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: `https://${process.env.REACT_APP_ACCESS_DOMAIN}/api/v2/`,
-        scope: 'read:current_user update:current_user_metadata'
+        audience: `http://localhost:3000/api/v1`,
+        scope: 'openid profile email read:current_user update:current_user_metadata start:session'
       }}
     >
       <App />
