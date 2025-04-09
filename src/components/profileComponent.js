@@ -30,6 +30,8 @@ const Profile = () => {
 
         const { user_metadata } = responseData;
         setUserMetadata(user_metadata);
+        console.log(user);
+        
       } catch (e) {
         console.log(e.message);
       }
@@ -42,7 +44,7 @@ const Profile = () => {
     isAuthenticated && (
       <div>
         <img src={user.picture} alt={user.name} />
-        <h2>{user.name}</h2>
+        <h2>{user.nickname}</h2>
         <p>{user.email}</p>
         <h3>User Metadata</h3>
         {userMetadata ? (
