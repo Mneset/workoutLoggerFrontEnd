@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import api from '../api';
 
 function SessionContentComponent( {onSessionEnd }) {
@@ -10,10 +11,23 @@ function SessionContentComponent( {onSessionEnd }) {
     const [notes, setNotes] = useState('');
     const [sessionLogId, setSessionLogId] = useState('');
     const [sessionNotes, setSessionNotes] = useState('');
+    const { getAccessTokenSilently, user } = useAuth0();
 
     const handleAddExercise = async () => {
         try {
-            const response = await api.post('/new-session/exercise', {exerciseId, setId, reps, weight, notes, sessionLogId})
+            const accessToken = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: `http://localhost:3000/api/v1`,
+                    scope: "openid start:session",
+                },
+            });
+
+            const response = await api.post('/new-session/exercise', {exerciseId, setId, reps, weight, notes, sessionLogId}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
             console.log("Exercise added to session:", response.data);
             alert("Exercise added to session!");
         } catch (error) {
@@ -24,7 +38,19 @@ function SessionContentComponent( {onSessionEnd }) {
     const handleEndSession = async () => {
         const sessionNotes = window.prompt("Please provide notes for the session");
         try {
-            const response = await api.put('/new-session/end', {sessionLogId, sessionNotes})
+            const accessToken = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: `http://localhost:3000/api/v1`,
+                    scope: "openid start:session",
+                },
+            });
+
+            const response = await api.put('/new-session/end', {sessionLogId, sessionNotes}, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+            
             console.log("Session ended:", response.data);
             alert("Session ended!");
             onSessionEnd()
