@@ -25,9 +25,9 @@ function StartSessionComponent({ onSessionStart }) {
                     }
                 });
 
-            console.log("Session started:", response.data);
+            console.log("Session started:", response);
             alert("Session started!");
-            onSessionStart()
+            onSessionStart(response.data.sessionLogId);
         } catch (error) {
             console.error("Error starting session:", error);      
         }

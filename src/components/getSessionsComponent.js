@@ -3,12 +3,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import api from '../api';
 
 function GetSessionsComponent() {
-    const [userId, setUserId] = useState('github|182747903');
     const [sessions, setSessions] = useState([]);
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, user } = useAuth0();
     
     const handleGetSessions = async (e) => {
-        e.preventDefault();
         try {
             const accessToken = await getAccessTokenSilently({
                 authorizationParams: {
@@ -19,7 +17,7 @@ function GetSessionsComponent() {
 
             console.log("Access Token:", accessToken);
 
-            const response = await api.get('/session-history', { params: { userId }, 
+            const response = await api.get('/session-history', { params: { userId: user.sub }, 
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },
@@ -31,51 +29,49 @@ function GetSessionsComponent() {
         }
     }
 
-    return (
-        <div>
-            <div className='get-sessions-form-container'>
-                <h2>Get all sessions</h2>
-                <form className='get-sessions-form' onSubmit={handleGetSessions}>
-                    <label>User ID: </label>
-                    <input
-                        type="string"
-                        name="userId"
-                        placeholder='github|182747903'
-                        onChange={(e) => setUserId(e.target.value)}
-                    />
-                    <button type="submit">Get sessions</button>
-                </form>
-            <h2>Sessions</h2>
-            </div>
+    useEffect(()=> {
+        handleGetSessions();
+    }, []);
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Session ID</th>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sessions && sessions.length > 0 ? 
-                        (sessions.filter(session => session.id >= 6).map((session) => (
-                            <tr key={session.id}>
-                                <td>{session.id}</td>
-                                <td>{session.sessionDateStart}</td>
-                                <td>{session.sessionDateEnd}</td>
-                                <td>{session.notes}</td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4">Sessions has not been requested</td>
-                        </tr>
-                    )}
-                </tbody>
-            </table>
+    return (
+        <div id='sessions-container'> 
+            { sessions && sessions.length > 0 ? (
+                sessions.filter(session => session.id >= 6).map((session) => (
+                    <div key={session.id}>
+                        <h2>Session ID: {session.id}</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Exercise</th>
+                                    <th>Reps</th>
+                                    <th>Weight</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {Array.isArray(session.ExerciseLogs) && session.ExerciseLogs.length > 0 ? (
+                                    session.ExerciseLogs.map((log, index) => (
+                                        <tr key={`${session.id}-${log.exerciseId}-${index}`}>
+                                            <td>{log.Exercise.name}</td>
+                                            <td>{log.reps}</td>
+                                            <td>{log.weight}</td>
+                                            <td>{log.notes}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr>
+                                        <td colSpan="4">No exercise logs found for this session.</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                ))
+            ) : (
+                <div>No sessions found.</div>
+            )}
         </div>
-    )
-}
+    );
+};
 
 export default GetSessionsComponent;

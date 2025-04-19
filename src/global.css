@@ -70,7 +70,7 @@ th {
     justify-content: center;
 }
 
-.get-sessions-form-container, .get-session-form-container {
+.get-session-form-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -86,4 +86,11 @@ th {
 .button-group {
     display: flex;
     justify-content: space-between;
+}
+
+.sessions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }

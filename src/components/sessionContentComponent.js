@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import api from '../api';
 
-function SessionContentComponent( {onSessionEnd }) {
+function SessionContentComponent( {sessionLogId, onSessionEnd }) {
     //exerciseId, setId, reps, weight, notes, sessionLogId
     const [exerciseId, setExerciseId] = useState(1);
     const [setId, setSetId] = useState(1);
     const [reps, setReps] = useState(10);
     const [weight, setWeight] = useState(100);
     const [notes, setNotes] = useState('');
-    const [sessionLogId, setSessionLogId] = useState('');
     const [sessionNotes, setSessionNotes] = useState('');
     const { getAccessTokenSilently, user } = useAuth0();
 
@@ -107,13 +106,6 @@ function SessionContentComponent( {onSessionEnd }) {
                     name="notes" 
                     placeholder='Please provide notes if needed' 
                     onChange={(e) => setNotes(e.target.value)}
-                />
-                <label>Session Log ID: </label>
-                <input 
-                    type="number" 
-                    name="sessionLogId" 
-                    placeholder='Please provide the session log ID' 
-                    onChange={(e) => setSessionLogId(e.target.value)}
                 />
                 <div className='button-group'>
                     <button type="submit" name='addExercise'>Add exercise</button>

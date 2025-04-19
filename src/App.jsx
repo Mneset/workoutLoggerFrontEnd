@@ -11,16 +11,18 @@ import Profile from './components/profileComponent.js'
 
 function App() {
 
-  //ad isLoggedIn for rendering getting session and session by id
-
   const [sessionStarted, setSessionStarted] = useState(false);
+  const [sessionLogId, setSessionLogId] = useState(null);
 
-  const handleSessionStarted = () => {
+  const handleSessionStarted = (newSessionLogId) => {
+    console.log("New sessionLogId:", newSessionLogId);
     setSessionStarted(true)
+    setSessionLogId(newSessionLogId)
   };
 
   const handleSessionEnded = () => {
     setSessionStarted(false)
+    setSessionLogId(null)
   }
 
   return (  
@@ -37,13 +39,13 @@ function App() {
           <Route path="/new-session" element={
             <div className='form-container'>
             {!sessionStarted && <StartSessionComponent onSessionStart={handleSessionStarted}/>}
-            {sessionStarted && <SessionContentComponent onSessionEnd={handleSessionEnded} /> }
+            {sessionStarted && <SessionContentComponent sessionLogId={sessionLogId} onSessionEnd={handleSessionEnded} /> }
           </div>
           } /> 
           <Route path="/session-history" element={
             <div className='table-container'>
             <GetSessionsComponent />
-            <GetSessionComponent />
+           {/*  <GetSessionComponent /> */}
           </div>
           } />
           </Routes>
