@@ -12,7 +12,7 @@ function GetSessionComponent() {
         try {
             const accessToken = await getAccessTokenSilently({
                 authorizationParams: {
-                    audience: `http://localhost:3000/api/v1`,
+                    audience: `'https://dev-n8xnfzfw0w26p6nq.us.auth0.com/api/v2/'`,
                     scope: "openid start:session",
                 },
             }); 

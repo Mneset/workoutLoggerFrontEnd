@@ -10,7 +10,7 @@ function GetSessionsComponent() {
         try {
             const accessToken = await getAccessTokenSilently({
                 authorizationParams: {
-                    audience: `http://localhost:3000/api/v1`,
+                    audience: 'https://dev-n8xnfzfw0w26p6nq.us.auth0.com/api/v2/',
                     scope: "openid start:session",
                 },
             }); 
@@ -42,28 +42,49 @@ function GetSessionsComponent() {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Exercise</th>
-                                    <th>Reps</th>
-                                    <th>Weight</th>
-                                    <th>Notes</th>
+                                    <th colSpan="4" style={{ fontWeight: 'bold', textAlign: 'center'}}>
+                                        Evening Session         
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {Array.isArray(session.ExerciseLogs) && session.ExerciseLogs.length > 0 ? (
-                                    session.ExerciseLogs.map((log, index) => (
-                                        <tr key={`${session.id}-${log.exerciseId}-${index}`}>
-                                            <td>{log.Exercise.name}</td>
-                                            <td>{log.reps}</td>
-                                            <td>{log.weight}</td>
-                                            <td>{log.notes}</td>
+                            {Array.isArray(session.ExerciseLogs) && session.ExerciseLogs.length > 0 ? (
+                                Object.entries(
+                                    session.ExerciseLogs.reduce((acc, log) => {
+                                        const exerciseName = log.Exercise.name;
+                                        if (!acc[exerciseName]) acc[exerciseName] = [];
+                                        acc[exerciseName].push(log);
+                                        return acc;
+                                    }, {})
+                                ).map(([exerciseName, logs]) => (
+                                    <tbody key={exerciseName}>
+                                        <tr>
+                                            <td colSpan="4" style={{ fontWeight: 'bold', textAlign: 'center'}}>
+                                                {exerciseName}
+                                            </td>
                                         </tr>
-                                    ))
-                                ) : (
+                                        <tr>
+                                            <td>Set</td>
+                                            <td>Reps</td>
+                                            <td>Weight</td>
+                                            <td>Notes</td>
+                                        </tr>
+                                        {logs.map((log, index) => (
+                                            <tr key={`${session.id}-${log.exerciseId}-${index}`}>
+                                                <td>{index + 1}</td>
+                                                <td>{log.reps}</td>
+                                                <td>{log.weight}</td>
+                                                <td>{log.notes}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                ))
+                            ) : (
+                                <tbody>
                                     <tr>
                                         <td colSpan="4">No exercise logs found for this session.</td>
                                     </tr>
-                                )}
-                            </tbody>
+                                </tbody>
+                            )}
                         </table>
                     </div>
                 ))
