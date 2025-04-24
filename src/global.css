@@ -8,7 +8,7 @@ body {
 }
 
 #navbar {
-    background-color: red !important;
+    background-color: rgb(175, 20, 20) !important;
     color: white;
 }
 
@@ -41,7 +41,7 @@ form input {
 
 form button {
     padding: 10px 15px;
-    background-color: red;
+    background-color: rgb(175, 20, 20);
     color: white;
     border: none;
     border-radius: 4px;
@@ -55,7 +55,7 @@ form button:hover {
 }
 
 table {
-    background-color: red;
+    background-color: rgb(175, 20, 20);
     color: white;
     width: 100%;
     border-collapse: collapse;
@@ -63,7 +63,7 @@ table {
 }
 
 table, th, td {
-    border: 1px solid red;
+    border: 1px solid rgb(175, 20, 20);
 }
 
 td {
@@ -73,7 +73,7 @@ td {
 }
 
 th {
-    background-color: red;
+    background-color: rgb(175, 20, 20);
     padding: 12px;
     text-align: left;
 }
@@ -114,4 +114,8 @@ th {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+}
+
+.exercise-name {
+    background-color: rgb(32, 32, 32);
 }

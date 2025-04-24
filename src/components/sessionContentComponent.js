@@ -10,7 +10,30 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
     const [weight, setWeight] = useState(100);
     const [notes, setNotes] = useState('');
     const [sessionNotes, setSessionNotes] = useState('');
+    const [session, setSession] = useState(null);
     const { getAccessTokenSilently, user } = useAuth0();
+
+    const handleGetSession = async (e) => {
+        try {
+            const accessToken = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: `https://dev-n8xnfzfw0w26p6nq.us.auth0.com/api/v2/`,
+                    scope: "openid start:session",
+                },
+            }); 
+
+            const response = await api.get('/session-history/:id', { params: { sessionLogId }, 
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            });
+
+            setSession(response.data.session);
+            console.log('Current session:', response.data.session);
+        } catch (error) {
+            console.log('Error getting current session:', error.response ? error.response.data : error.message);
+        }
+    }
 
     const handleAddExercise = async () => {
         try {
@@ -29,6 +52,8 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
 
             console.log("Exercise added to session:", response.data);
             alert("Exercise added to session!");
+            await handleGetSession()
+
         } catch (error) {
             console.log("Error adding exercise to session:", error);
         }
@@ -112,6 +137,63 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                     <button type="submit" name='endSession'>End session</button>
                 </div>
             </form>
+
+            <div id='session-container'> 
+            {session && session.ExerciseLogs.length > 0 ? (
+                    <div key={session.id}>
+                        <h2>Session ID: {session.id}</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th colSpan="4" style={{ fontWeight: 'bold', textAlign: 'center'}}>
+                                        Evening Session         
+                                    </th>
+                                </tr>
+                            </thead>
+                            {Array.isArray(session.ExerciseLogs) && session.ExerciseLogs.length > 0 ? (
+                                Object.entries(
+                                    session.ExerciseLogs.reduce((acc, log) => {
+                                        const exerciseName = log.Exercise.name;
+                                        if (!acc[exerciseName]) acc[exerciseName] = [];
+                                        acc[exerciseName].push(log);
+                                        return acc;
+                                    }, {})
+                                ).map(([exerciseName, logs]) => (
+                                    <tbody key={exerciseName}>
+                                        <tr>
+                                            <td colSpan="4"  className='exercise-name' style={{ fontWeight: 'bold', textAlign: 'center'}}>
+                                                {exerciseName}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Set</td>
+                                            <td>Reps</td>
+                                            <td>Weight</td>
+                                            <td>Notes</td>
+                                        </tr>
+                                        {logs.map((log, index) => (
+                                            <tr key={`${session.id}-${log.exerciseId}-${index}`}>
+                                                <td>{index + 1}</td>
+                                                <td>{log.reps}</td>
+                                                <td>{log.weight}</td>
+                                                <td>{log.notes}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                ))
+                            ) : (
+                                <tbody>
+                                    <tr>
+                                        <td colSpan="4">No exercise logs found for this session.</td>
+                                    </tr>
+                                </tbody>
+                            )}
+                        </table>
+                    </div>     
+            ) : (
+                <div>Sessions is empty as of now. Add an exercise to see your session</div>
+            )}
+        </div>
 
         </div>
         

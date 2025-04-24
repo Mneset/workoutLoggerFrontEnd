@@ -5,7 +5,6 @@ import './global.css';
 import StartSessionComponent from './components/startSessionComponent';
 import SessionContentComponent from './components/sessionContentComponent.js';
 import GetSessionsComponent from './components/getSessionsComponent';
-import GetSessionComponent from './components/getSessionComponent';
 import NavbarComponent from './components/navbarComponent.js'
 import Profile from './components/profileComponent.js'
 
@@ -46,7 +45,6 @@ function App() {
           <Route path="/session-history" element={
             <div className='table-container'>
             <GetSessionsComponent />
-           {/*  <GetSessionComponent /> */}
           </div>
           } />
           </Routes>

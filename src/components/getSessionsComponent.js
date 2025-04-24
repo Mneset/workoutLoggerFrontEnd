@@ -58,7 +58,7 @@ function GetSessionsComponent() {
                                 ).map(([exerciseName, logs]) => (
                                     <tbody key={exerciseName}>
                                         <tr>
-                                            <td colSpan="4" style={{ fontWeight: 'bold', textAlign: 'center'}}>
+                                            <td colSpan="4"  className='exercise-name' style={{ fontWeight: 'bold', textAlign: 'center'}}>
                                                 {exerciseName}
                                             </td>
                                         </tr>
