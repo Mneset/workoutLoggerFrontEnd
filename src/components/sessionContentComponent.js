@@ -1,17 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import api from '../api';
 
 function SessionContentComponent( {sessionLogId, onSessionEnd }) {
     //exerciseId, setId, reps, weight, notes, sessionLogId
-    const [exerciseId, setExerciseId] = useState(1);
+    const [exerciseId, setExerciseId] = useState();
     const [setId, setSetId] = useState(1);
     const [reps, setReps] = useState(10);
     const [weight, setWeight] = useState(100);
     const [notes, setNotes] = useState('');
     const [sessionNotes, setSessionNotes] = useState('');
     const [session, setSession] = useState(null);
+    const [exercises, setExercises] = useState([]);
+    const [sets, setSets] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedExerciseName, setSelectedExerciseName] = useState('')
     const { getAccessTokenSilently, user } = useAuth0();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const accessToken = await getAccessTokenSilently({
+                    authorizationParams: {
+                        audience: 'https://dev-n8xnfzfw0w26p6nq.us.auth0.com/api/v2/',
+                        scope: "openid start:session",
+                    },
+                });
+
+                const response = await api.get('/exercises', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+
+                setExercises(response.data.exercises);
+
+                const setsResponse = await api.get('/sets', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                });
+
+                setSets(setsResponse.data.setTypes);
+            
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, [getAccessTokenSilently]);
 
     const handleGetSession = async (e) => {
         try {
@@ -97,20 +135,55 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
         <div>
             <h2>Add a exercise to the session</h2>
             <form className='add-exercise-form' onSubmit={handleSubmit}> 
-                <label>Exercise ID: </label>
-                <input 
-                    type="number" 
-                    name="exerciseId" 
-                    placeholder='1' 
-                    onChange={(e) => setExerciseId(e.target.value)}
-                />
-                <label>Set ID: </label>
-                <input 
-                    type="number" 
-                    name="setId" 
-                    placeholder='1' 
+            <label htmlFor="exerciseSearch">Search for an exercise: </label>
+            <input
+    type="text"
+    id="exerciseSearch"
+    name="exerciseSearch"
+    placeholder="Type to search..."
+    value={searchQuery || selectedExerciseName} // Show selectedExerciseName if searchQuery is empty
+    onChange={(e) => {
+        setSearchQuery(e.target.value); // Update searchQuery when typing
+        setSelectedExerciseName(''); // Clear selectedExerciseName when typing
+    }}
+/>
+{/* Show the list only when the user is typing */}
+{searchQuery && (
+    <ul className='searchUl'>
+        {exercises
+            .filter((exercise) =>
+                exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((exercise) => (
+                <li
+                    key={exercise.id}
+                    style={{ cursor: 'pointer', padding: '5px 0' }}
+                    onClick={() => {
+                        console.log('Selected exercise ID:', exercise.id);
+                        setExerciseId(exercise.id); // Set the selected exercise ID
+                        setSelectedExerciseName(exercise.name); // Set the selected exercise name
+                        setSearchQuery(''); // Clear the search query to hide the list
+                    }}
+                >
+                    {exercise.name}
+                </li>
+            ))}
+    </ul>
+)}
+                <label htmlFor="setId">Choose a set: </label>
+                <select
+                    id="setId"
+                    name="setId"
+                    value={setId}
                     onChange={(e) => setSetId(e.target.value)}
-                />
+                >
+                    <option value="" disabled>Select a set</option>
+                    {sets.map((set) => (
+                        <option key={set.id} value={set.id}>
+                            {set.name}
+                        </option>
+                    ))}
+                </select>
                 <label>Reps: </label>
                 <input 
                     type="number" 

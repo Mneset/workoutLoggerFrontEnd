@@ -119,3 +119,12 @@ th {
 .exercise-name {
     background-color: rgb(32, 32, 32);
 }
+
+.searchUl {
+        max-height: 150px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        background-color: white;
+        color: black;
+}
