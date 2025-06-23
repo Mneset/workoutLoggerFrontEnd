@@ -29,6 +29,32 @@ function GetSessionsComponent() {
         }
     }
 
+    const deleteSession = async (sessionLogId) => {
+        try {
+            console.log("Sessions:", sessions);
+
+            const accessToken = await getAccessTokenSilently({
+                authorizationParams: {
+                    audience: 'https://dev-n8xnfzfw0w26p6nq.us.auth0.com/api/v2/',
+                    scope: "openid start:session",
+                },
+            });
+
+            console.log("Access Token:", accessToken);
+
+            const response = await api.delete(`/session-history/${sessionLogId}`, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                },
+            });
+            console.log("Session deleted:", response.data);
+            alert("Session deleted successfully!");
+            handleGetSessions();
+        } catch (error) {
+            console.error("Error deleting session:", error);         
+        }
+    }
+
     useEffect(()=> {
         handleGetSessions();
     }, []);
@@ -36,14 +62,14 @@ function GetSessionsComponent() {
     return (
         <div id='sessions-container'> 
             { sessions && sessions.length > 0 ? (
-                sessions.filter(session => session.id >= 6).map((session) => (
+                sessions.map((session) => (
                     <div key={session.id}>
                         <h2>Session ID: {session.id}</h2>
                         <table>
                             <thead>
                                 <tr>
                                     <th colSpan="4" style={{ fontWeight: 'bold', textAlign: 'center'}}>
-                                        Evening Session         
+                                        Evening Session  
                                     </th>
                                 </tr>
                             </thead>
@@ -86,6 +112,11 @@ function GetSessionsComponent() {
                                 </tbody>
                             )}
                         </table>
+                        <button className='session-button' onClick={() => {
+                            console.log("Deleting session with ID:", session.id);
+                            deleteSession(session.id)}
+                        }
+                            >Delete</button>
                     </div>
                 ))
             ) : (
