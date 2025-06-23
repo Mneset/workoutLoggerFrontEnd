@@ -141,10 +141,10 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
     id="exerciseSearch"
     name="exerciseSearch"
     placeholder="Type to search..."
-    value={searchQuery || selectedExerciseName} // Show selectedExerciseName if searchQuery is empty
+    value={searchQuery || selectedExerciseName}
     onChange={(e) => {
-        setSearchQuery(e.target.value); // Update searchQuery when typing
-        setSelectedExerciseName(''); // Clear selectedExerciseName when typing
+        setSearchQuery(e.target.value);
+        setSelectedExerciseName('');
     }}
 />
 {/* Show the list only when the user is typing */}
@@ -160,9 +160,8 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                     style={{ cursor: 'pointer', padding: '5px 0' }}
                     onClick={() => {
                         console.log('Selected exercise ID:', exercise.id);
-                        setExerciseId(exercise.id); // Set the selected exercise ID
-                        setSelectedExerciseName(exercise.name); // Set the selected exercise name
-                        setSearchQuery(''); // Clear the search query to hide the list
+                        setExerciseId(exercise.id);
+                        setSearchQuery('');
                     }}
                 >
                     {exercise.name}

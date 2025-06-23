@@ -16,7 +16,7 @@ body {
     color: white;
 }
 
-h1 {
+.main-header {
     text-align: center;
 }
 
@@ -39,7 +39,7 @@ form input {
     border-radius: 4px;
 }
 
-form button {
+button {
     padding: 10px 15px;
     background-color: rgb(175, 20, 20);
     color: white;
@@ -49,9 +49,9 @@ form button {
 }
 
 form button:hover {
-    transform: scale(1.2); /* Scales the button to 1.2 times its original size */
+    transform: scale(1.2);
     background-color: darkred;
-    transition: transform 0.2s ease; /* Smooth transition */
+    transition: transform 0.2s ease;
 }
 
 table {
@@ -127,4 +127,44 @@ th {
         padding: 10px;
         background-color: white;
         color: black;
+}
+
+img {
+    max-width: 200px;
+    border-radius: 50%;
+}
+
+.main-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.profile-container,
+.session-redirect-container,
+.history-redirect-container {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Add this line */
+    flex-direction: column;
+    background: rgba(255,255,255,0.05);
+    height: 400px;
+    width: 400px;
+    border: 2px solid rgb(175, 20, 20);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.session-redirect-container form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.session-redirect-container h2,
+.history-redirect-container h2 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

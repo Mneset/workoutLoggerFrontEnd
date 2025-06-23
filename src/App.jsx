@@ -6,7 +6,9 @@ import StartSessionComponent from './components/startSessionComponent';
 import SessionContentComponent from './components/sessionContentComponent.js';
 import GetSessionsComponent from './components/getSessionsComponent';
 import NavbarComponent from './components/navbarComponent.js'
-import Profile from './components/profileComponent.js'
+import ProfileComponent from './components/profileComponent.js'
+import SesssionRedirectComponent from './components/sessionRedirectComponent.js';
+import HistoryRedirectComponent from './components/historyRedirectComponent.js';
 
 
 function App() {
@@ -32,8 +34,12 @@ function App() {
         <Routes>
           <Route path="/" element={
             <div>
-              <h1>Workout Logger</h1>
-              <Profile/>
+              <h1 className='main-header'>MyFitnessTracker</h1>
+              <div className='main-container'>
+                <ProfileComponent/>
+                <SesssionRedirectComponent onSessionStart={handleSessionStarted} />
+                <HistoryRedirectComponent />
+              </div>
             </div>
             } />
           <Route path="/new-session" element={
