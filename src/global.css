@@ -2,6 +2,10 @@
     padding: 70px
 }
 
+h1 {
+    padding: 30px;
+}
+
 body {
     background-color: black;
     color: white;
@@ -115,6 +119,15 @@ th {
     align-items: center;
     flex-direction: column;
 }
+.sessions-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: 2px solid rgb(175, 20, 20);
+    border-radius: 20px;
+    padding: 20px;
+}
 
 .exercise-name {
     background-color: rgb(32, 32, 32);
@@ -167,4 +180,11 @@ img {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.add-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
