@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import api from '../api';
+import ExerciseListComponent from './exerciseListComponent';
 
-function SessionContentComponent( {sessionLogId, onSessionEnd }) {
+
+function SessionContent2Component( {sessionLogId, onSessionEnd }) {
     const [exerciseId, setExerciseId] = useState();
     const [setId, setSetId] = useState(1);
     const [reps, setReps] = useState(10);
@@ -16,6 +18,7 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
     const [showAddExerciseForm, setShowAddExerciseForm] = useState(false);
     const [editTableLogs, setEditTableLogs] = useState([]);
     const [sessionName, setSessionName] = useState('');
+    const [modal, setModal] = useState(false);
  
     const { getAccessTokenSilently, user } = useAuth0();
 
@@ -53,6 +56,10 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
         fetchData();
     }, [getAccessTokenSilently]);
 
+    const toggleModal = () => {
+            setModal(!modal);
+        }
+
     const handleGetSession = async (e) => {
         try {
             const accessToken = await getAccessTokenSilently({
@@ -75,7 +82,7 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
         }
     }
 
-    const handleAddExercise = async () => {
+    const handleAddExercise = async (id) => {
         try {
             const accessToken = await getAccessTokenSilently({
                 authorizationParams: {
@@ -84,7 +91,7 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                 },
             });
 
-            const response = await api.post('/new-session/exercise', {exerciseId, setId, reps, weight, notes, sessionLogId}, {
+            const response = await api.post('/new-session/exercise', {exerciseId: id, setId, reps, weight, notes, sessionLogId}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -121,6 +128,7 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
             console.log("Session ended:", response.data);
             alert("Session ended!");
             onSessionEnd()
+            window.location.href = '/';
         } catch (error) {
             console.log("Error ending session:", error);      
         }
@@ -270,7 +278,7 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                                 <tbody key={exerciseName}>
                                     <tr>
                                         <td colSpan="4"  className='exercise-name' style={{ fontWeight: 'bold', textAlign: 'center'}}>
-                                            {exerciseName}
+                                            <span>{exerciseName}</span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -365,8 +373,8 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                                     <tr>
                                         <td colSpan="4">
                                             <button 
-                                            className='add-button'
-                                            onClick={() => setShowAddExerciseForm(true)}
+                                            className='add-btn'
+                                            onClick={() => toggleModal()}
                                             >
                                                 Add new Exercise
                                             </button>
@@ -382,8 +390,8 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                                 <tr>
                                     <td colSpan="4">
                                         <button 
-                                        className='add-button'
-                                        onClick={() => setShowAddExerciseForm(true)}
+                                        className='add-btn'
+                                        onClick={() => toggleModal()}
                                         >
                                             Add Exercise
                                         </button>
@@ -392,48 +400,6 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                             </tbody>
                         )}
                     </table>
-                    {showAddExerciseForm && (
-                        <form className='add-exercise-form' onSubmit={handleSubmit}>
-                            <label htmlFor="exerciseSearch">Search for an exercise: </label>
-                            <input
-                                type="text"
-                                id="exerciseSearch"
-                                name="exerciseSearch"
-                                placeholder="Type to search..."
-                                value={searchQuery || selectedExerciseName}
-                                onChange={(e) => {
-                                    setSearchQuery(e.target.value);
-                                    setSelectedExerciseName('');
-                                }}
-                            />
-                            {searchQuery && (
-                                <ul className='searchUl'>
-                                    {exercises
-                                        .filter((exercise) =>
-                                            exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
-                                        )
-                                        .map((exercise) => (
-                                            <li
-                                                key={exercise.id}
-                                                style={{ cursor: 'pointer', padding: '5px 0' }}
-                                                onClick={() => {
-                                                    console.log('Selected exercise ID:', exercise.id);
-                                                    setExerciseId(exercise.id);
-                                                    setSelectedExerciseName(exercise.name);
-                                                    setSearchQuery('');
-                                                }}
-                                            >
-                                                {exercise.name}
-                                            </li>
-                                        ))}
-                                </ul>
-                            )}
-                            <div className='button-group'>
-                                <button type="submit" name='addExercise'>Add exercise</button>
-                                <button type="button" onClick={() => setShowAddExerciseForm(false)}>Cancel</button>
-                            </div>
-                        </form>    
-                    )}
                     <div className='button-group'>
                     <button 
                             className='session-button'
@@ -453,8 +419,20 @@ function SessionContentComponent( {sessionLogId, onSessionEnd }) {
                 </div>     
                 )}
              </div>
+              {modal && (
+                        <ExerciseListComponent
+                            exercises={exercises}
+                            onClose={toggleModal}
+                            onSelect={exercise => {
+                                setExerciseId(exercise.id);
+                                setSelectedExerciseName(exercise.name);
+                                handleAddExercise(exercise.id);
+                                setShowAddExerciseForm(true);
+                            }}
+                        />
+                    )}
         </div>                 
     )
 }
 
-export default SessionContentComponent;
+export default SessionContent2Component;

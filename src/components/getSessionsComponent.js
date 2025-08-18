@@ -64,12 +64,20 @@ function GetSessionsComponent() {
             { sessions && sessions.length > 0 ? (
                 sessions.map((session) => (
                     <div key={session.id}>
-                        <h2>Session ID: {session.id}</h2>
+                        <h2>
+                            {new Date(session.sessionDateStart).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
+                        </h2>
                         <table>
                             <thead>
                                 <tr>
                                     <th colSpan="4" style={{ fontWeight: 'bold', textAlign: 'center'}}>
-                                        Evening Session  
+                                        {session.name || 'Untitled Session'}  
                                     </th>
                                 </tr>
                             </thead>
@@ -112,11 +120,18 @@ function GetSessionsComponent() {
                                 </tbody>
                             )}
                         </table>
+                        <div className='button-group'>
+                        <button className='session-button' onClick={() => {
+                            console.log("Navigating to session with ID:", session.id);
+                            window.location.href = `/new-session?sessionLogId=${session.id}`;
+                        }}
+                            >Edit</button>
                         <button className='session-button' onClick={() => {
                             console.log("Deleting session with ID:", session.id);
                             deleteSession(session.id)}
                         }
                             >Delete</button>
+                        </div>
                     </div>
                 ))
             ) : (

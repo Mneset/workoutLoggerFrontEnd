@@ -4,11 +4,12 @@ import './App.css';
 import './global.css';
 import StartSessionComponent from './components/startSessionComponent';
 import SessionContentComponent from './components/sessionContentComponent.js';
-import GetSessionsComponent from './components/getSessionsComponent';
+import GetSessions2Component from './components/getSessions2Component';
 import NavbarComponent from './components/navbarComponent.js'
 import ProfileComponent from './components/profileComponent.js'
 import SesssionRedirectComponent from './components/sessionRedirectComponent.js';
 import HistoryRedirectComponent from './components/historyRedirectComponent.js';
+import SessionContent2Component from './components/sessionContent2Component.js';
 
 
 function App() {
@@ -45,12 +46,12 @@ function App() {
           <Route path="/new-session" element={
             <div className='form-container'>
             {!sessionStarted && <StartSessionComponent onSessionStart={handleSessionStarted}/>}
-            {sessionStarted && <SessionContentComponent sessionLogId={sessionLogId} onSessionEnd={handleSessionEnded} /> }
+            {sessionStarted && <SessionContent2Component sessionLogId={sessionLogId} onSessionEnd={handleSessionEnded} /> }
           </div>
           } /> 
           <Route path="/session-history" element={
             <div className='table-container'>
-            <GetSessionsComponent />
+            <GetSessions2Component />
           </div>
           } />
           </Routes>
