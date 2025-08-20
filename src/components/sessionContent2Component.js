@@ -19,6 +19,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
     const [editTableLogs, setEditTableLogs] = useState([]);
     const [sessionName, setSessionName] = useState('');
     const [modal, setModal] = useState(false);
+    const [tempIdCounter, setTempIdCounter] = useState(10000)
  
     const { getAccessTokenSilently, user } = useAuth0();
 
@@ -82,7 +83,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
         }
     }
 
-    const handleAddExercise = async (id) => {
+    const handleAddExercise = async (id, exerciseName) => {
         try {
             const accessToken = await getAccessTokenSilently({
                 authorizationParams: {
@@ -98,7 +99,22 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
             });
 
             console.log("Exercise added to session:", response.data);
-            await handleGetSession()
+            console.log("Exercise added to session:", response.data.exerciseLog.id);
+
+            
+            const newLog = response.data.log || {
+                id: response.data.exerciseLog.id,
+                exerciseId: id,
+                setId,
+                reps,
+                weight,
+                notes,
+                sessionLogId,
+                Exercise: { name: exerciseName },
+            };
+
+            setTempIdCounter(prev => prev - 1);
+            setEditTableLogs(prevLogs => [...prevLogs, newLog]);
 
         } catch (error) {
             console.log("Error adding exercise to session:", error);
@@ -111,6 +127,9 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
             return
         }
         console.log("Notes for session:", notes);
+
+        await saveAllEdits();
+        
         try {
             const accessToken = await getAccessTokenSilently({
                 authorizationParams: {
@@ -133,17 +152,6 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
             console.log("Error ending session:", error);      
         }
     }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const action = e.nativeEvent.submitter.name;
-        if (action === 'addExercise'){
-            handleAddExercise();
-            setShowAddExerciseForm(false);
-        } else if (action === 'endSession') {
-            handleEndSession();
-        }
-    };
 
     const handleCancelSession = async (sessionLogId) => {
         try {
@@ -214,7 +222,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
         });
 
         // Send a POST request to create a new log with the same values as the last log
-        await api.post('/new-session/exercise', {
+        const response = await api.post('/new-session/exercise', {
             exerciseId: lastLog.exerciseId,
             setId: lastLog.setId,
             reps: lastLog.reps,
@@ -227,12 +235,20 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
             }
         });
 
-        // Refresh session data to get the new log
-        await handleGetSession();
+        const newLog = response.data.log || {
+            ...lastLog,
+            id: response.data.exerciseLog.id,
+            setId: lastLog.setId + 1,
+        };
+        setEditTableLogs(prevLogs => [...prevLogs, newLog]);
     } catch (error) {
         console.error("Error adding set:", error);
     }
 };
+
+const deleteExercise = async (sessionId) => {
+
+}
 
     useEffect(() => {
         handleGetSession();
@@ -266,7 +282,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                                 </th>
                             </tr>
                         </thead>
-                        {Array.isArray(session.ExerciseLogs) && session.ExerciseLogs.length > 0 ? (
+                        {Array.isArray(editTableLogs) && editTableLogs.length > 0 ? (
                             Object.entries(
                                 editTableLogs.reduce((acc, log) => {
                                     const exerciseName = log.Exercise.name;
@@ -279,6 +295,17 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                                     <tr>
                                         <td colSpan="4"  className='exercise-name' style={{ fontWeight: 'bold', textAlign: 'center'}}>
                                             <span>{exerciseName}</span>
+                                            <button
+                                                className='delete-exercise-btn'
+                                                title="Delete exercise"
+                                                onClick={() => {
+                                                    if (window.confirm("Are you sure you want to delete this exercise?")) {
+                                                        deleteExercise(session.id)
+                                                    }
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -410,7 +437,6 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                     <button
                             type="button"
                             className='session-button'
-                            style={{ marginTop: "10px" }}
                             onClick={handleEndSession}
                         >
                             End session
@@ -426,7 +452,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                             onSelect={exercise => {
                                 setExerciseId(exercise.id);
                                 setSelectedExerciseName(exercise.name);
-                                handleAddExercise(exercise.id);
+                                handleAddExercise(exercise.id, exercise.name);
                                 setShowAddExerciseForm(true);
                             }}
                         />

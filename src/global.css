@@ -57,6 +57,12 @@ form button:hover {
     transition: transform 0.2s ease;
 }
 
+.history-redirect-container button:hover {
+    transform: scale(1.2);
+    background-color: darkred;
+    transition: transform 0.2s ease;
+}
+
 table {
     background-color: rgb(175, 20, 20);
     color: white;
@@ -188,17 +194,16 @@ img {
     position: relative;
 }
 
-/* .session-card-showcase {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background: rgba(255,255,255,0.05);
-    border: 2px solid rgb(175, 20, 20);
-    border-radius: 20px;
-    padding: 20px;
-    position: relative;
-} */
+.session-button {
+    margin-top: 10px;
+}
+
+.session-button:hover {
+    transform: scale(1.1);
+    background-color: rgb(105, 11, 11);
+    color: white;
+    transition: background-color 0.2s ease;
+}
 
 .session-redirect-container form {
     width: 100%;
@@ -220,6 +225,12 @@ img {
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+
+.add-button:hover, .add-btn:hover {
+    background-color: rgb(105, 11, 11);
+    color: white;
+    transition: background-color 0.2s ease;
 }
 
 .add-exercise-form {
@@ -339,6 +350,7 @@ img {
     position: relative;
     padding-bottom: 16px;
 }
+
 .open-btn {
     position: absolute;
     left: 50%;
@@ -348,6 +360,15 @@ img {
     margin-top: 0;
     align-self: center;
     display: block;
+}
+
+
+
+.open-btn:hover {
+    transform: translateX(-50%) scale(1.1);
+    background-color: rgb(105, 11, 11);
+    color: white;
+    transition: background-color 0.2s ease;
 }
 
 .exercise-list-table {
@@ -452,4 +473,43 @@ body.modal-open {
     background-color: #232429;
     color: white;
     padding: 8px;
+}
+
+.delete-session-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    z-index: 2;
+}
+.delete-session-btn:hover {
+    transform: scale(1.2);
+    color: white;
+    background: rgb(105, 11, 11);
+    border-radius: 50%;
+}
+
+.exercise-name {
+    position: relative;
+}
+
+.delete-exercise-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    z-index: 2;
+}
+.delete-exercise-btn:hover {
+    transform: translateY(-50%) scale(1.2);
+    color: white;
+    background: rgb(105, 11, 11);
+    border-radius: 50%;
 }

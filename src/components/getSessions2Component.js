@@ -71,6 +71,17 @@ function GetSessions2Component() {
                 {sessions && sessions.length > 0 ? (
                     sessions.map((session => (
                         <div key={session.id} className='session-card'>
+                            <button
+                                className='delete-session-btn'
+                                title="Delete session"
+                                onClick={() => {
+                                    if (window.confirm("Are you sure you want to delete this session?")) {
+                                        deleteSession(session.id)
+                                    }
+                                }}
+                            >
+                                ✕
+                            </button>
                             <div className='session-header'>
                                 <h3>{session.name || 'Untitled Session'}</h3>
                                 <p>
