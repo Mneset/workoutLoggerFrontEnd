@@ -20,7 +20,7 @@ const SesssionRedirectComponent = ({ onSessionStart }) => {
             console.log('user.sub:', user.sub);
             console.log("Access Token:", accessToken);
             
-            const response = await api.post('/new-session', {userId: user.sub}, {
+            const response = await api.post('/session', {userId: user.sub}, {
                     headers: {
                         Authorization: `Bearer ${accessToken}`
                     }

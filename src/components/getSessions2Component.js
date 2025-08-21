@@ -24,7 +24,7 @@ function GetSessions2Component() {
 
             console.log("Access Token:", accessToken);
 
-            const response = await api.get('/session-history', { params: { userId: user.sub }, 
+            const response = await api.get('/session', { params: { userId: user.sub }, 
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },
@@ -49,7 +49,7 @@ function GetSessions2Component() {
 
             console.log("Access Token:", accessToken);
 
-            const response = await api.delete(`/session-history/${sessionLogId}`, {
+            const response = await api.delete(`/session/${sessionLogId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },

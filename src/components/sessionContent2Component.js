@@ -33,7 +33,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                     },
                 });
 
-                const response = await api.get('/exercises', {
+                const response = await api.get('/exercise-log', {
                     headers: {
                         Authorization: `Bearer ${accessToken}`,
                     },
@@ -70,7 +70,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                 },
             }); 
 
-            const response = await api.get('/session-history/:id', { params: { sessionLogId }, 
+            const response = await api.get(`/session/${sessionLogId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -92,7 +92,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                 },
             });
 
-            const response = await api.post('/new-session/exercise', {exerciseId: id, setId, reps, weight, notes, sessionLogId}, {
+            const response = await api.post('/exercise-log', {exerciseId: id, setId, reps, weight, notes, sessionLogId}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -138,7 +138,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
                 },
             });
 
-            const response = await api.put('/new-session/end', {sessionLogId, notes, updatedLogs: editTableLogs, name: sessionName}, {
+            const response = await api.put(`/session/${sessionLogId}`, {notes, updatedLogs: editTableLogs, name: sessionName}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 }
@@ -164,7 +164,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
 
             console.log("Access Token:", accessToken);
 
-            const response = await api.delete(`/session-history/${sessionLogId}`, {
+            const response = await api.delete(`/session/${sessionLogId}`, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
                 },
@@ -186,7 +186,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
         });
         for (const log of editTableLogs) {
             if (log.id) {
-                await api.put(`/new-session/exercise-log/${log.id}`, {
+                await api.put(`/exercise-log/${log.id}`, {
                     reps: log.reps,
                     weight: log.weight,
                     notes: log.notes,
@@ -222,7 +222,7 @@ function SessionContent2Component( {sessionLogId, onSessionEnd }) {
         });
 
         // Send a POST request to create a new log with the same values as the last log
-        const response = await api.post('/new-session/exercise', {
+        const response = await api.post('/exercise-log', {
             exerciseId: lastLog.exerciseId,
             setId: lastLog.setId,
             reps: lastLog.reps,
@@ -338,7 +338,7 @@ const deleteExercise = async (sessionId) => {
                                                                     scope: "openid start:session",
                                                                 },
                                                             });
-                                                            await api.put(`/new-session/exercise-log/${log.id}`, {
+                                                            await api.put(`/exercise-log/${log.id}`, {
                                                                 reps: e.target.value,
                                                                 weight: log.weight,
                                                                 notes: log.notes,

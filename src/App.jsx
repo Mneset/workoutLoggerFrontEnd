@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import './global.css';
 import StartSessionComponent from './components/startSessionComponent';
-import SessionContentComponent from './components/sessionContentComponent.js';
 import GetSessions2Component from './components/getSessions2Component';
 import NavbarComponent from './components/navbarComponent.js'
 import ProfileComponent from './components/profileComponent.js'

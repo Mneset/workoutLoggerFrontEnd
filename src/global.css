@@ -483,7 +483,6 @@ body.modal-open {
     border: none;
     cursor: pointer;
     color: white;
-    z-index: 2;
 }
 .delete-session-btn:hover {
     transform: scale(1.2);
@@ -505,7 +504,6 @@ body.modal-open {
     border: none;
     cursor: pointer;
     color: white;
-    z-index: 2;
 }
 .delete-exercise-btn:hover {
     transform: translateY(-50%) scale(1.2);
